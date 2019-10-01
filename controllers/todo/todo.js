@@ -1,4 +1,5 @@
 const Todo = require('../../models/todo/todo');
+const mongoose = require('mongoose');
 
 
 const getTodos = async() => {
@@ -16,7 +17,7 @@ const addTodo = async(name) => {
 
 const editTodo = async(id,todo) => {
     
-    return Todo.findByIdAndUpdate(id,{ $set : todo });
+        return Todo.findByIdAndUpdate(id,{ $set : todo },{ new : true })
 
 }
 
