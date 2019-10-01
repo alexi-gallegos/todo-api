@@ -1,5 +1,6 @@
 const app = require('express')();
-const { addTodo, getTodos } = require('../../controllers/todo/todo');
+const mongoose = require('mongoose');
+const { addTodo, getTodos, editTodo } = require('../../controllers/todo/todo');
 
 app.get('/todo', (req,res) => {
 
@@ -22,7 +23,22 @@ app.post('/todo', (req,res) => {
 });
 
 app.patch('/todo/:id', (req,res) => {
-    res.json('patch todo');
+    
+    let todo = {
+        name : req.body.name,
+        completed : req.body.completed
+    }
+
+    editTodo(req.params.id,todo).then(resp => {
+        res.json('todo updated');
+    }).catch(err => {
+        if(err instanceof mongoose.CastError){
+            res.status(400).json({message : 'Todo not found by this ID'});
+        }else{
+            res.status(400).json(err);
+        }
+    })
+
 });
 
 app.delete('/todo/:id', (req,res) => {

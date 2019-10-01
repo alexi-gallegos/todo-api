@@ -7,8 +7,10 @@ require('dotenv').config();
 //middleware
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 //db connection
+mongoose.set('useFindAndModify',false);
 mongoose.connect(process.env.DB_URL,{useNewUrlParser : true, useUnifiedTopology : true},(err,res) => {
     if (err) throw err;
 
