@@ -1,11 +1,24 @@
 const app = require('express')();
+const { addTodo, getTodos } = require('../../controllers/todo/todo');
 
 app.get('/todo', (req,res) => {
-    res.json('all todos');
+
+    getTodos().then(resp => {
+        res.json(resp);
+    }).catch(err => {
+        res.status(400).json(err);
+    })
+    
 });
 
 app.post('/todo', (req,res) => {
-    res.json('new todo');
+    let {name} = req.body;
+
+    addTodo(name).then(resp => {
+        res.json('new todo added');
+    }).catch(err => {
+        res.status(400).json({err});
+    })
 });
 
 app.patch('/todo/:id', (req,res) => {

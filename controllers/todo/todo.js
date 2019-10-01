@@ -1,15 +1,20 @@
-const Todo = require('../../models/Todo/todo');
+const Todo = require('../../models/todo/todo');
 
 
-const addTodo = (todo) => {
+const getTodos = async() => {
+    return Todo.find()
+}
+
+const addTodo = async(name) => {
     
     let newTodo = new Todo({
-        name : todo.name
+        name
     });
 
     return newTodo.save()
 };
 
 module.exports = {
-    addTodo
+    addTodo,
+    getTodos
 }

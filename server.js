@@ -1,9 +1,12 @@
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 require('dotenv').config();
 
 //middleware
+
+app.use(bodyParser.json());
 
 //db connection
 mongoose.connect(process.env.DB_URL,{useNewUrlParser : true, useUnifiedTopology : true},(err,res) => {
