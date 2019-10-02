@@ -1,6 +1,10 @@
 const app = require('express')();
-const mongoose = require('mongoose');
-const { addTodo, getTodos, editTodo, deleteTodo } = require('../../controllers/todo/todo');
+const { addTodo, 
+        getTodos, 
+        editTodoName, 
+        deleteTodo, 
+        changeTodoState } = require('../../controllers/todo/todo');
+const { validObjectId } = require('../../middlewares/middlewares');
 const { validParams } = require('../../helpers/helpers');
 
 app.get('/todo', (req,res) => {
@@ -23,25 +27,40 @@ app.post('/todo', (req,res) => {
     })
 });
 
-app.patch('/todo/:id', async(req,res) => {
+app.patch('/todo/:id',validObjectId, async(req,res) => {
     
     let todo = {
-        name : req.body.name,
-        completed : req.body.completed
+        name : req.body.name
     }
 
     try {
         await validParams(todo);
-        let updatedTodo = await editTodo(req.params.id, todo);
+        let updatedTodo = await editTodoName(req.params.id, todo);
         res.json(updatedTodo);
+    } catch (error) {     
+        if (error === "No docs found") return res.status(404).json(error)
+
+        res.status(400).json(error);        
+
+    }
+});
+
+app.patch('/todo/change_state/:id',validObjectId, async(req,res) => {
+    
+    try {
+        
+        let todoUpdated = await changeTodoState(req.params.id, req.body.completed);
+        res.json(todoUpdated);
+
     } catch (error) {
+        if (error === "No docs found") return res.status(404).json(error)
+
         res.status(400).json(error);
     }
 
-
 });
 
-app.delete('/todo/:id', async(req,res) => {
+app.delete('/todo/:id',validObjectId, async(req,res) => {
     
     try {
         await deleteTodo(req.params.id);

@@ -15,9 +15,15 @@ const addTodo = async(name) => {
     return newTodo.save()
 };
 
-const editTodo = async(id,todo) => {
+const editTodoName = async(id,{name}) => {
     
-        return Todo.findByIdAndUpdate(id,{ $set : todo },{ new : true })
+    return Todo.findByIdAndUpdate(id,{ $set : {name} },{ new : true }).orFail('No docs found')
+
+}
+
+const changeTodoState = (id,state) => {
+
+    return Todo.findByIdAndUpdate(id, { $set : {completed : state} }, { new : true }).orFail('No docs found');
 
 }
 
@@ -30,6 +36,7 @@ const deleteTodo = (id) => {
 module.exports = {
     addTodo,
     getTodos,
-    editTodo,
-    deleteTodo
+    editTodoName,
+    deleteTodo,
+    changeTodoState
 }
