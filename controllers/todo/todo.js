@@ -21,8 +21,15 @@ const editTodo = async(id,todo) => {
 
 }
 
+const deleteTodo = (id) => {
+
+    return Todo.findByIdAndDelete(id)
+
+}
+
 module.exports = {
     addTodo,
     getTodos,
-    editTodo
+    editTodo,
+    deleteTodo
 }

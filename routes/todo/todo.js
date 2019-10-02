@@ -1,6 +1,6 @@
 const app = require('express')();
 const mongoose = require('mongoose');
-const { addTodo, getTodos, editTodo } = require('../../controllers/todo/todo');
+const { addTodo, getTodos, editTodo, deleteTodo } = require('../../controllers/todo/todo');
 const { validParams } = require('../../helpers/helpers');
 
 app.get('/todo', (req,res) => {
@@ -30,7 +30,6 @@ app.patch('/todo/:id', async(req,res) => {
         completed : req.body.completed
     }
 
-
     try {
         await validParams(todo);
         let updatedTodo = await editTodo(req.params.id, todo);
@@ -42,8 +41,15 @@ app.patch('/todo/:id', async(req,res) => {
 
 });
 
-app.delete('/todo/:id', (req,res) => {
-    res.json('delete todo');
+app.delete('/todo/:id', async(req,res) => {
+    
+    try {
+        await deleteTodo(req.params.id);
+        res.json('deleted');
+    } catch (error) {
+        res.status(400).json(err);
+    }
+
 });
 
 module.exports = app;
